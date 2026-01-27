@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Title, Text, Card, Grid, Group, Badge, Button, Table } from '@mantine/core';
+import { Title, Text, Card, Grid, Group, Badge, Table } from '@mantine/core';
 import { IconUser, IconPhone, IconMail, IconMapPin, IconDeviceAirpods, IconCalendar } from '@tabler/icons-react';
 import { useCustomerById } from '../hooks/useCustomers.js';
 import { useUnitsByCustomer } from '../hooks/useUnits.js';

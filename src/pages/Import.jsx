@@ -5,11 +5,9 @@ import {
   Card, 
   Button, 
   FileInput, 
-  Group, 
   List,
   ThemeIcon,
   Alert,
-  Progress,
   Grid
 } from '@mantine/core';
 import { 
@@ -17,7 +15,6 @@ import {
   IconFileSpreadsheet, 
   IconInfoCircle, 
   IconCheck, 
-  IconX,
   IconDownload
 } from '@tabler/icons-react';
 import { useImportCSV } from '../hooks/useImport.js';

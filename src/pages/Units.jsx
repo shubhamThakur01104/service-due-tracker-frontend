@@ -9,9 +9,7 @@ import {
   ActionIcon,
   Table,
   Badge,
-  Select,
-  Tabs,
-  Grid
+  Select
 } from '@mantine/core';
 import { Link } from 'react-router-dom';
 import {
@@ -34,7 +32,6 @@ import UnitForm from '../components/UnitForm';
 const Units = () => {
   const [search, setSearch] = useState('');
   const [selectedType, setSelectedType] = useState(null);
-  const [activeTab, setActiveTab] = useState('all');
 
   const { data: units = [], isLoading: unitsLoading } = useUnits();
   const { data: customers = [], isLoading: customersLoading } = useCustomers();
@@ -52,11 +49,9 @@ const Units = () => {
     (!selectedType || unit.type === selectedType)
   );
 
-  // Get units based on active tab
+  // Get units based on selected type
   const getUnitsForTab = () => {
-    let unitsToReturn;
-    if (activeTab === 'all') unitsToReturn = filteredUnits;
-    else unitsToReturn = filteredUnits.filter(unit => unit.type === activeTab);
+    let unitsToReturn = filteredUnits;
     
     // Sort units by next service date (nearest first)
     return unitsToReturn.sort((a, b) => {
@@ -112,15 +107,7 @@ const Units = () => {
     return { color: 'green', text: 'Scheduled' };
   };
 
-  const getCustomerName = (customerId) => {
-    // If customerId is an object (populated), use its name property
-    if (customerId && typeof customerId === 'object') {
-      return customerId.name || 'Unknown Customer';
-    }
-    // If customerId is a string (not populated), find in customers array
-    const customer = customers.find(c => c._id === customerId);
-    return customer ? customer.name : 'Unknown Customer';
-  };
+
 
   return (
     <div className="p-4">

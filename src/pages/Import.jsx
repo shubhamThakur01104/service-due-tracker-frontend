@@ -43,9 +43,9 @@ const Import = () => {
   };
 
   const downloadTemplate = () => {
-    const csvContent = `name,phone,email,houseNumber,street,area,city,state,pincode,country,displayName,type,lastServiceDate,nextServiceDate,serviceIntervalDays
-John Doe,9876543210,john@example.com,123,Main Street,Downtown,New York,NY,10001,USA,Living Room AC,AC,2023-01-15,2023-04-15,90
-Jane Smith,9876543211,jane@example.com,456,Elm Street,Uptown,Los Angeles,CA,90001,USA,Backup Generator,Generator,2023-02-01,2023-05-01,90`;
+    const csvContent = `name,phone,displayName,type,nextServiceDate,email,houseNumber,street,city,state,pincode,lastServiceDate
+John Doe,9876543210,Living Room AC,AC,2023-04-15,john@example.com,123,Main Street,New York,NY,10001,2023-01-15
+Jane Smith,9876543211,Backup Generator,Generator,2023-05-01,jane@example.com,456,Elm Street,Los Angeles,CA,90001,2023-02-01`;
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -138,9 +138,8 @@ Jane Smith,9876543211,jane@example.com,456,Elm Street,Uptown,Los Angeles,CA,9000
               }
               className="mb-6"
             >
-              <List.Item><strong>Customer Information:</strong> name, phone, email</List.Item>
-              <List.Item><strong>Address Fields:</strong> houseNumber, street, area, city, state, pincode, country</List.Item>
-              <List.Item><strong>Unit Information:</strong> displayName, type, lastServiceDate, nextServiceDate, serviceIntervalDays</List.Item>
+              <List.Item><strong>Required Fields:</strong> name, phone, displayName, type, nextServiceDate</List.Item>
+              <List.Item><strong>Optional Fields:</strong> email, houseNumber, street, city, state, pincode, lastServiceDate</List.Item>
             </List>
 
             <Button
@@ -163,6 +162,9 @@ Jane Smith,9876543211,jane@example.com,456,Elm Street,Uptown,Los Angeles,CA,9000
         
         <List spacing="sm" size="sm" className="text-gray-700">
           <List.Item>
+            <strong>Column Order:</strong> name, phone, displayName, type, nextServiceDate, email, houseNumber, street, city, state, pincode, lastServiceDate
+          </List.Item>
+          <List.Item>
             <strong>Required Fields:</strong> name, phone, displayName, type, nextServiceDate
           </List.Item>
           <List.Item>
@@ -170,9 +172,6 @@ Jane Smith,9876543211,jane@example.com,456,Elm Street,Uptown,Los Angeles,CA,9000
           </List.Item>
           <List.Item>
             <strong>Date Format:</strong> Use YYYY-MM-DD format (e.g., 2023-04-15)
-          </List.Item>
-          <List.Item>
-            <strong>Service Interval:</strong> Number of days between services (default: 90)
           </List.Item>
           <List.Item>
             <strong>Customers First:</strong> Customers are created/updated before units

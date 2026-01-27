@@ -25,7 +25,6 @@ import {
   useUnits,
   useDeleteUnit
 } from '../hooks/useUnits.js';
-import { useCustomers } from '../hooks/useCustomers.js';
 import { modals } from '@mantine/modals';
 import UnitForm from '../components/UnitForm';
 
@@ -34,7 +33,6 @@ const Units = () => {
   const [selectedType, setSelectedType] = useState(null);
 
   const { data: units = [], isLoading: unitsLoading } = useUnits();
-  const { data: customers = [], isLoading: customersLoading } = useCustomers();
   const deleteUnit = useDeleteUnit();
 
   // Type filters for filterOptions
@@ -152,7 +150,7 @@ const Units = () => {
 
       {/* Units List */}
       <Card shadow="sm" padding="lg" radius="md">
-        {unitsLoading || customersLoading ? (
+        {unitsLoading ? (
           <Text>Loading units...</Text>
         ) : filteredUnits.length === 0 ? (
           <div className="text-center py-20 mt-8">

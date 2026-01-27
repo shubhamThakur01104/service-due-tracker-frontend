@@ -5,8 +5,7 @@ import {
   Group, 
   Box,
   Title,
-  Grid,
-  Select
+  Grid
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useCreateCustomer, useUpdateCustomer } from '../hooks/useCustomers.js';

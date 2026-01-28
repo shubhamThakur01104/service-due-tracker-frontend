@@ -95,6 +95,14 @@ const unitApi = {
   delete: async (id) => {
     await api.delete(`/units/${id}`);
   },
+  
+  registerServiceCompletion: async ({ id, serviceDate }) => {
+    const response = await api.post(`/units/${id}/service-completion`, { serviceDate });
+    // Extract data from APIResponse object - response.data contains the APIResponse wrapper
+    const apiResponse = response.data;
+    const dataResult = apiResponse.data || {};
+    return dataResult;
+  },
 };
 
 // Hooks
@@ -209,6 +217,35 @@ export const useDeleteUnit = () => {
       showNotification({
         title: 'Error',
         message: error.message || 'Failed to delete unit',
+        color: 'red',
+      });
+    },
+  });
+};
+
+export const useRegisterServiceCompletion = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: unitApi.registerServiceCompletion,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['units'] });
+      queryClient.invalidateQueries({ queryKey: ['units', 'due'] });
+      queryClient.invalidateQueries({ queryKey: ['units', variables.id] });
+      queryClient.invalidateQueries({ queryKey: ['units', 'customer'] });
+      queryClient.invalidateQueries({ queryKey: ['units', 'due', 'today'] });
+      queryClient.invalidateQueries({ queryKey: ['units', 'due', 'week'] });
+      queryClient.invalidateQueries({ queryKey: ['units', 'due', 'month'] });
+      showNotification({
+        title: 'Success',
+        message: 'Service completion registered successfully',
+        color: 'green',
+      });
+    },
+    onError: (error) => {
+      showNotification({
+        title: 'Error',
+        message: error.message || 'Failed to register service completion',
         color: 'red',
       });
     },

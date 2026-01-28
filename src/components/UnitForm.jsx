@@ -65,6 +65,39 @@ const UnitForm = ({ unit }) => {
     },
   });
 
+  // Function to automatically calculate next service date
+  const calculateNextServiceDate = (lastServiceDate, serviceIntervalDays) => {
+    if (!lastServiceDate || !serviceIntervalDays) return null;
+    
+    const lastDate = new Date(lastServiceDate);
+    const intervalDays = parseInt(serviceIntervalDays);
+    
+    if (isNaN(lastDate.getTime()) || isNaN(intervalDays) || intervalDays <= 0) return null;
+    
+    const nextDate = new Date(lastDate);
+    nextDate.setDate(nextDate.getDate() + intervalDays);
+    
+    return nextDate;
+  };
+  
+  // Handle changes to last service date or service interval days to auto-calculate next service date
+  React.useEffect(() => {
+    const lastServiceDate = form.values.lastServiceDate;
+    const serviceIntervalDays = form.values.serviceIntervalDays;
+    
+    // Only auto-calculate if both values are present
+    if (lastServiceDate && serviceIntervalDays) {
+      const calculatedNextDate = calculateNextServiceDate(lastServiceDate, serviceIntervalDays);
+      if (calculatedNextDate) {
+        // Only update if nextServiceDate hasn't been manually set or if it differs from calculated
+        if (!unit || !unit.nextServiceDate || 
+            new Date(unit.nextServiceDate).getTime() !== new Date(calculatedNextDate).getTime()) {
+          form.setFieldValue('nextServiceDate', calculatedNextDate);
+        }
+      }
+    }
+  }, [form.values.lastServiceDate, form.values.serviceIntervalDays]);
+  
   const handleSubmit = (values) => {
     const unitData = {
       customerId: values.customerId,

@@ -1,12 +1,13 @@
 import React from 'react';
-import { Title, Text, Card, Grid, Badge, Group, Button, Modal, Table } from '@mantine/core';
+import { Title, Text, Card, Grid, Badge, Group, Button, Modal, Table, ActionIcon } from '@mantine/core';
 import { Link } from 'react-router-dom';
-import { IconCalendar, IconUser, IconDeviceAirpods } from '@tabler/icons-react';
+import { IconCalendar, IconUser, IconDeviceAirpods, IconCheck } from '@tabler/icons-react';
 import { useCustomers } from '../hooks/useCustomers.js';
 import { useUnits, useUnitsNeedingService } from '../hooks/useUnits.js';
 import { modals } from '@mantine/modals';
 import CustomerForm from '../components/CustomerForm';
 import UnitForm from '../components/UnitForm';
+import ServiceCompletionModal from '../components/ServiceCompletionModal';
 
 // Helper functions
   const getDaysUntilService = (nextServiceDate) => {
@@ -74,6 +75,10 @@ const Dashboard = () => {
   // State for service schedule modals
   const [serviceTodayModalOpened, setServiceTodayModalOpened] = React.useState(false);
   
+  // State for service completion modal
+  const [serviceCompletionModalOpen, setServiceCompletionModalOpen] = React.useState(false);
+  const [selectedUnitForService, setSelectedUnitForService] = React.useState(null);
+  
 
   
   // Error handling
@@ -86,6 +91,11 @@ const Dashboard = () => {
       size: 'lg',
       children: <CustomerForm />,
     });
+  };
+  
+  const openServiceCompletionModal = (unit) => {
+    setSelectedUnitForService(unit);
+    setServiceCompletionModalOpen(true);
   };
 
   const openAddUnitModal = () => {
@@ -371,6 +381,7 @@ const Dashboard = () => {
               <Table.Th>Customer</Table.Th>
               <Table.Th>Type</Table.Th>
               <Table.Th>Next Service</Table.Th>
+              <Table.Th>Action</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
@@ -406,6 +417,16 @@ const Dashboard = () => {
                         </Text>
                       )}
                     </Group>
+                  </Table.Td>
+                  <Table.Td>
+                    <ActionIcon
+                      variant="light"
+                      color="green"
+                      onClick={() => openServiceCompletionModal(unit)}
+                      title="Register Service Completion"
+                    >
+                      <IconCheck size={16} />
+                    </ActionIcon>
                   </Table.Td>
                 </Table.Tr>
               );
@@ -584,6 +605,16 @@ const Dashboard = () => {
         </Table>
       </Modal>
 
+      {selectedUnitForService && (
+        <ServiceCompletionModal
+          opened={serviceCompletionModalOpen}
+          onClose={() => {
+            setServiceCompletionModalOpen(false);
+            setSelectedUnitForService(null);
+          }}
+          unit={selectedUnitForService}
+        />
+      )}
 
 
     </div>

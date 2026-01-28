@@ -19,7 +19,9 @@ import {
   IconEdit,
   IconTrash,
   IconUser,
-  IconCalendar
+  IconCalendar,
+  IconWash,
+  IconCheck
 } from '@tabler/icons-react';
 import {
   useUnits,
@@ -27,10 +29,13 @@ import {
 } from '../hooks/useUnits.js';
 import { modals } from '@mantine/modals';
 import UnitForm from '../components/UnitForm';
+import ServiceCompletionModal from '../components/ServiceCompletionModal';
 
 const Units = () => {
   const [search, setSearch] = useState('');
   const [selectedType, setSelectedType] = useState(null);
+  const [serviceCompletionModalOpen, setServiceCompletionModalOpen] = useState(false);
+  const [selectedUnitForService, setSelectedUnitForService] = useState(null);
 
   const { data: units = [], isLoading: unitsLoading } = useUnits();
   const deleteUnit = useDeleteUnit();
@@ -88,6 +93,11 @@ const Units = () => {
       confirmProps: { color: 'red' },
       onConfirm: () => deleteUnit.mutate(id),
     });
+  };
+  
+  const openServiceCompletionModal = (unit) => {
+    setSelectedUnitForService(unit);
+    setServiceCompletionModalOpen(true);
   };
 
   const getDaysUntilService = (nextServiceDate) => {
@@ -260,6 +270,14 @@ const Units = () => {
                         <Group gap="xs">
                           <ActionIcon
                             variant="light"
+                            color="green"
+                            onClick={() => openServiceCompletionModal(unit)}
+                            title="Register Service Completion"
+                          >
+                            <IconCheck size={16} />
+                          </ActionIcon>
+                          <ActionIcon
+                            variant="light"
                             color="blue"
                             onClick={() => openEditUnitModal(unit)}
                           >
@@ -282,6 +300,17 @@ const Units = () => {
           </div>
         )}
       </Card>
+      
+      {selectedUnitForService && (
+        <ServiceCompletionModal
+          opened={serviceCompletionModalOpen}
+          onClose={() => {
+            setServiceCompletionModalOpen(false);
+            setSelectedUnitForService(null);
+          }}
+          unit={selectedUnitForService}
+        />
+      )}
     </div>
   );
 };

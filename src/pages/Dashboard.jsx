@@ -111,10 +111,10 @@ const Dashboard = () => {
       <div className="flex justify-between items-center mb-8">
         <div>
           <Title order={1} className="text-3xl font-bold text-gray-800">
-            Dashboard
+            Service Due Tracker
           </Title>
           <Text className="text-gray-600 mt-2">
-            Welcome to your HVAC Service Tracker
+            Welcome to your Service Due Tracker
           </Text>
         </div>
         <Group>
@@ -284,7 +284,7 @@ const Dashboard = () => {
                   <Table.Th>Type</Table.Th>
                   <Table.Th>Last Service Date</Table.Th>
                   <Table.Th>Status</Table.Th>
-                  <Table.Th>Overdue Days</Table.Th>
+                  <Table.Th>Days Remaining</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
@@ -327,8 +327,18 @@ const Dashboard = () => {
                           <Badge color="red" variant="filled">
                             {overdueDays} day{overdueDays !== 1 ? 's' : ''} overdue
                           </Badge>
+                        ) : days === 0 ? (
+                          <Badge color="orange" variant="filled">
+                            Due today
+                          </Badge>
+                        ) : days <= 7 ? (
+                          <Badge color="yellow" variant="filled">
+                            {days} day{days !== 1 ? 's' : ''} left
+                          </Badge>
                         ) : (
-                          <Text>-</Text>
+                          <Badge color="green" variant="filled">
+                            {days} day{days !== 1 ? 's' : ''} left
+                          </Badge>
                         )}
                       </Table.Td>
                     </Table.Tr>
@@ -381,6 +391,7 @@ const Dashboard = () => {
               <Table.Th>Customer</Table.Th>
               <Table.Th>Type</Table.Th>
               <Table.Th>Next Service</Table.Th>
+              <Table.Th>Days Remaining</Table.Th>
               <Table.Th>Action</Table.Th>
             </Table.Tr>
           </Table.Thead>
@@ -419,6 +430,21 @@ const Dashboard = () => {
                     </Group>
                   </Table.Td>
                   <Table.Td>
+                    {days < 0 ? (
+                      <Badge color="red" variant="filled">
+                        {Math.abs(days)} day{Math.abs(days) !== 1 ? 's' : ''} overdue
+                      </Badge>
+                    ) : days === 0 ? (
+                      <Badge color="orange" variant="filled">
+                        Due today
+                      </Badge>
+                    ) : (
+                      <Badge color="yellow" variant="filled">
+                        {days} day{days !== 1 ? 's' : ''} left
+                      </Badge>
+                    )}
+                  </Table.Td>
+                  <Table.Td>
                     <ActionIcon
                       variant="light"
                       color="green"
@@ -449,6 +475,7 @@ const Dashboard = () => {
               <Table.Th>Customer</Table.Th>
               <Table.Th>Type</Table.Th>
               <Table.Th>Next Service</Table.Th>
+              <Table.Th>Days Remaining</Table.Th>
               <Table.Th>Status</Table.Th>
             </Table.Tr>
           </Table.Thead>
@@ -475,6 +502,21 @@ const Dashboard = () => {
                   </Table.Td>
                   <Table.Td>{new Date(unit.nextServiceDate).toLocaleDateString()}</Table.Td>
                   <Table.Td>
+                    {days < 0 ? (
+                      <Badge color="red" variant="filled">
+                        {Math.abs(days)} day{Math.abs(days) !== 1 ? 's' : ''} overdue
+                      </Badge>
+                    ) : days === 0 ? (
+                      <Badge color="orange" variant="filled">
+                        Due today
+                      </Badge>
+                    ) : (
+                      <Badge color="yellow" variant="filled">
+                        {days} day{days !== 1 ? 's' : ''} left
+                      </Badge>
+                    )}
+                  </Table.Td>
+                  <Table.Td>
                     <Badge color={status.color} variant="light">
                       {status.text}
                     </Badge>
@@ -500,6 +542,7 @@ const Dashboard = () => {
               <Table.Th>Customer</Table.Th>
               <Table.Th>Type</Table.Th>
               <Table.Th>Next Service</Table.Th>
+              <Table.Th>Days Remaining</Table.Th>
               <Table.Th>Status</Table.Th>
             </Table.Tr>
           </Table.Thead>
@@ -525,6 +568,21 @@ const Dashboard = () => {
                     </Badge>
                   </Table.Td>
                   <Table.Td>{new Date(unit.nextServiceDate).toLocaleDateString()}</Table.Td>
+                  <Table.Td>
+                    {days < 0 ? (
+                      <Badge color="red" variant="filled">
+                        {Math.abs(days)} day{Math.abs(days) !== 1 ? 's' : ''} overdue
+                      </Badge>
+                    ) : days === 0 ? (
+                      <Badge color="orange" variant="filled">
+                        Due today
+                      </Badge>
+                    ) : (
+                      <Badge color="yellow" variant="filled">
+                        {days} day{days !== 1 ? 's' : ''} left
+                      </Badge>
+                    )}
+                  </Table.Td>
                   <Table.Td>
                     <Badge color={status.color} variant="light">
                       {status.text}
@@ -552,6 +610,7 @@ const Dashboard = () => {
               <Table.Th>Type</Table.Th>
               <Table.Th>Last Service</Table.Th>
               <Table.Th>Next Service</Table.Th>
+              <Table.Th>Days Remaining</Table.Th>
               <Table.Th>Status</Table.Th>
             </Table.Tr>
           </Table.Thead>
@@ -592,6 +651,21 @@ const Dashboard = () => {
                         </Text>
                       )}
                     </Group>
+                  </Table.Td>
+                  <Table.Td>
+                    {days < 0 ? (
+                      <Badge color="red" variant="filled">
+                        {Math.abs(days)} day{Math.abs(days) !== 1 ? 's' : ''} overdue
+                      </Badge>
+                    ) : days === 0 ? (
+                      <Badge color="orange" variant="filled">
+                        Due today
+                      </Badge>
+                    ) : (
+                      <Badge color="yellow" variant="filled">
+                        {days} day{days !== 1 ? 's' : ''} left
+                      </Badge>
+                    )}
                   </Table.Td>
                   <Table.Td>
                     <Badge color={status.color} variant="light">

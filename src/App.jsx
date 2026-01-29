@@ -66,7 +66,7 @@ function App() {
                   <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
                   <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" />
                   <Title order={2}>
-                    <span className="text-accent-600">HVAC</span> Service Tracker
+                    <span className="text-accent-600">Service Due</span> Tracker
                   </Title>
                 </Group>
               </AppShell.Header>
@@ -74,13 +74,13 @@ function App() {
               <AppShell.Navbar p="md">
                 <div className="space-y-2">
                   <a href="/" className="nav-link">
-                    Dashboard
+                    Service Dashboard
                   </a>
                   <a href="/customers" className="nav-link">
                     Customers
                   </a>
                   <a href="/units" className="nav-link">
-                    Units
+                    Service Units
                   </a>
                   <a href="/import" className="nav-link">
                     Import Data

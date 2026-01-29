@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Title, Text, Card, Grid, Group, Badge, Table, Modal } from '@mantine/core';
+import { Title, Text, Card, Grid, Group, Badge, Table } from '@mantine/core';
 import { IconUser, IconPhone, IconMail, IconMapPin, IconDeviceAirpods, IconCalendar } from '@tabler/icons-react';
 import { useCustomerById } from '../hooks/useCustomers.js';
 import { useUnitsByCustomer } from '../hooks/useUnits.js';
@@ -12,10 +12,9 @@ const CustomerDetail = () => {
   const { data: customer, isLoading: customerLoading, error: customerError } = useCustomerById(id);
   const { data: units, isLoading: unitsLoading, error: unitsError } = useUnitsByCustomer(id);
   
-  const [selectedUnit, setSelectedUnit] = React.useState(null);
+
   
   const openUnitDetails = (unit) => {
-    setSelectedUnit(unit);
     modals.open({
       title: `Unit Details - ${unit.displayName}`,
       size: 'md',

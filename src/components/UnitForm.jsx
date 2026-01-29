@@ -115,6 +115,7 @@ const UnitForm = ({ unit }) => {
         }
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.values.lastServiceDate, form.values.serviceIntervalDays, form.values.nextServiceDate]);
   
   const handleSubmit = (values) => {

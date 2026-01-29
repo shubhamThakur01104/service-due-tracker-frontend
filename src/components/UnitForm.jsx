@@ -96,7 +96,7 @@ const UnitForm = ({ unit }) => {
         }
       }
     }
-  }, [form.values.lastServiceDate, form.values.serviceIntervalDays]);
+  }, [form.values.lastServiceDate, form.values.serviceIntervalDays, unit]);
   
   const handleSubmit = (values) => {
     const unitData = {

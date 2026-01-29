@@ -20,7 +20,6 @@ import {
   IconTrash,
   IconUser,
   IconCalendar,
-  IconWash,
   IconCheck
 } from '@tabler/icons-react';
 import {

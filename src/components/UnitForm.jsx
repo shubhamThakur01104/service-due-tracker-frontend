@@ -81,23 +81,41 @@ const UnitForm = ({ unit }) => {
   };
   
   // Handle changes to last service date or service interval days to auto-calculate next service date
+  const lastValuesRef = React.useRef({
+    lastServiceDate: null,
+    serviceIntervalDays: null
+  });
+  
   React.useEffect(() => {
     const lastServiceDate = form.values.lastServiceDate;
     const serviceIntervalDays = form.values.serviceIntervalDays;
     
-    // Only auto-calculate if both values are present
-    if (lastServiceDate && serviceIntervalDays) {
+    // Prevent infinite loop by checking if values actually changed
+    const hasValueChanged = 
+      lastServiceDate !== lastValuesRef.current.lastServiceDate ||
+      serviceIntervalDays !== lastValuesRef.current.serviceIntervalDays;
+    
+    if (!hasValueChanged) return;
+    
+    // Update ref values
+    lastValuesRef.current = {
+      lastServiceDate,
+      serviceIntervalDays
+    };
+    
+    // Only auto-calculate if both values are present and valid
+    if (lastServiceDate && serviceIntervalDays && serviceIntervalDays > 0) {
       const calculatedNextDate = calculateNextServiceDate(lastServiceDate, serviceIntervalDays);
       if (calculatedNextDate) {
         // Only update if nextServiceDate hasn't been manually set or if it differs from calculated
-        if (!unit || !unit.nextServiceDate || 
-            new Date(unit.nextServiceDate).getTime() !== new Date(calculatedNextDate).getTime()) {
+        const currentNextServiceDate = form.values.nextServiceDate;
+        if (!currentNextServiceDate || 
+            new Date(currentNextServiceDate).getTime() !== calculatedNextDate.getTime()) {
           form.setFieldValue('nextServiceDate', calculatedNextDate);
         }
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form.values.lastServiceDate, form.values.serviceIntervalDays, unit]);
+  }, [form.values.lastServiceDate, form.values.serviceIntervalDays, form.values.nextServiceDate]);
   
   const handleSubmit = (values) => {
     const unitData = {

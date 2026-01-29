@@ -323,23 +323,45 @@ const Dashboard = () => {
                         </Badge>
                       </Table.Td>
                       <Table.Td>
-                        {days < 0 ? (
-                          <Badge color="red" variant="filled">
-                            {overdueDays} day{overdueDays !== 1 ? 's' : ''} overdue
-                          </Badge>
-                        ) : days === 0 ? (
-                          <Badge color="orange" variant="filled">
-                            Due today
-                          </Badge>
-                        ) : days <= 7 ? (
-                          <Badge color="yellow" variant="filled">
-                            {days} day{days !== 1 ? 's' : ''} left
-                          </Badge>
-                        ) : (
-                          <Badge color="green" variant="filled">
-                            {days} day{days !== 1 ? 's' : ''} left
-                          </Badge>
-                        )}
+                        <div className="flex items-center gap-2">
+                          {days < 0 ? (
+                            <>
+                              <Badge color="red" variant="filled" size="sm">
+                                OVERDUE
+                              </Badge>
+                              <Text size="sm" className="text-red-600 font-medium">
+                                {overdueDays} day{overdueDays !== 1 ? 's' : ''}
+                              </Text>
+                            </>
+                          ) : days === 0 ? (
+                            <>
+                              <Badge color="orange" variant="filled" size="sm">
+                                DUE TODAY
+                              </Badge>
+                              <Text size="sm" className="text-orange-600 font-medium">
+                                Urgent
+                              </Text>
+                            </>
+                          ) : days <= 7 ? (
+                            <>
+                              <Badge color="yellow" variant="filled" size="sm">
+                                DUE SOON
+                              </Badge>
+                              <Text size="sm" className="text-yellow-700 font-medium">
+                                {days} day{days !== 1 ? 's' : ''}
+                              </Text>
+                            </>
+                          ) : (
+                            <>
+                              <Badge color="green" variant="filled" size="sm">
+                                SCHEDULED
+                              </Badge>
+                              <Text size="sm" className="text-green-600 font-medium">
+                                {days} day{days !== 1 ? 's' : ''}
+                              </Text>
+                            </>
+                          )}
+                        </div>
                       </Table.Td>
                     </Table.Tr>
                   );

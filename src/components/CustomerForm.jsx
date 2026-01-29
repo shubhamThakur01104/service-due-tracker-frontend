@@ -40,7 +40,8 @@ const CustomerForm = ({ customer }) => {
     validate: {
       name: (value) => (value.trim() ? null : 'Name is required'),
       phone: (value) => {
-        const phoneRegex = /^[0-9]{10,15}$/;
+        // Allow international format (+91XXXXXXXXXX) or domestic format (XXXXXXXXXX)
+        const phoneRegex = /^\+?[0-9]{10,15}$/;
         if (!value) return 'Phone number is required';
         if (!phoneRegex.test(value)) return 'Invalid phone number';
         return null;
@@ -109,7 +110,7 @@ const CustomerForm = ({ customer }) => {
           <Grid.Col span={12}>
             <TextInput
               label="Phone Number"
-              placeholder="Enter 10-digit phone number"
+              placeholder="Enter phone number (with or without + prefix)"
               {...form.getInputProps('phone')}
               required
             />

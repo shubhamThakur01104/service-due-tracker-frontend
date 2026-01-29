@@ -1,15 +1,65 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Title, Text, Card, Grid, Group, Badge, Table } from '@mantine/core';
+import { Title, Text, Card, Grid, Group, Badge, Table, Modal } from '@mantine/core';
 import { IconUser, IconPhone, IconMail, IconMapPin, IconDeviceAirpods, IconCalendar } from '@tabler/icons-react';
 import { useCustomerById } from '../hooks/useCustomers.js';
 import { useUnitsByCustomer } from '../hooks/useUnits.js';
 import { Link } from 'react-router-dom';
+import { modals } from '@mantine/modals';
 
 const CustomerDetail = () => {
   const { id } = useParams();
   const { data: customer, isLoading: customerLoading, error: customerError } = useCustomerById(id);
   const { data: units, isLoading: unitsLoading, error: unitsError } = useUnitsByCustomer(id);
+  
+  const [selectedUnit, setSelectedUnit] = React.useState(null);
+  
+  const openUnitDetails = (unit) => {
+    setSelectedUnit(unit);
+    modals.open({
+      title: `Unit Details - ${unit.displayName}`,
+      size: 'md',
+      children: (
+        <div className="space-y-4">
+          <div>
+            <Text fw={500} size="sm" className="text-gray-600">Unit Name</Text>
+            <Text>{unit.displayName}</Text>
+          </div>
+          <div>
+            <Text fw={500} size="sm" className="text-gray-600">Type</Text>
+            <Text>{unit.type}</Text>
+          </div>
+          <div>
+            <Text fw={500} size="sm" className="text-gray-600">Service Interval</Text>
+            <Text>{unit.serviceIntervalDays ? `${unit.serviceIntervalDays} days` : 'Not set'}</Text>
+          </div>
+          <div>
+            <Text fw={500} size="sm" className="text-gray-600">Last Service Date</Text>
+            <Text>
+              {unit.lastServiceDate 
+                ? new Date(unit.lastServiceDate).toLocaleDateString() 
+                : 'Not recorded'}
+            </Text>
+          </div>
+          <div>
+            <Text fw={500} size="sm" className="text-gray-600">Next Service Date</Text>
+            <Text>{new Date(unit.nextServiceDate).toLocaleDateString()}</Text>
+          </div>
+          <div>
+            <Text fw={500} size="sm" className="text-gray-600">Days Until Next Service</Text>
+            <Text>
+              {(() => {
+                const days = getDaysUntilService(unit.nextServiceDate);
+                if (days < 0) return `${Math.abs(days)} days overdue`;
+                if (days === 0) return 'Due today';
+                return `In ${days} days`;
+              })()}
+            </Text>
+          </div>
+        </div>
+      ),
+    });
+  };
 
   const getDaysUntilService = (nextServiceDate) => {
     const today = new Date();
@@ -145,8 +195,10 @@ const CustomerDetail = () => {
                   <Table.Tr>
                     <Table.Th>Unit Name</Table.Th>
                     <Table.Th>Type</Table.Th>
+                    <Table.Th>Service Interval</Table.Th>
                     <Table.Th>Last Service</Table.Th>
                     <Table.Th>Next Service</Table.Th>
+                    <Table.Th>Days Remaining</Table.Th>
                     <Table.Th>Status</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
@@ -162,13 +214,30 @@ const CustomerDetail = () => {
                             <div className="bg-accent-100 w-8 h-8 rounded-full flex items-center justify-center mr-3">
                               <IconDeviceAirpods size={16} className="text-accent-600" />
                             </div>
-                            <Text className="font-medium">{unit.displayName}</Text>
+                            <div>
+                              <Text 
+                                className="font-medium text-accent-600 cursor-pointer hover:underline"
+                                onClick={() => openUnitDetails(unit)}
+                              >
+                                {unit.displayName}
+                              </Text>
+                              <Text size="sm" className="text-gray-500">
+                                Click for details
+                              </Text>
+                            </div>
                           </div>
                         </Table.Td>
                         <Table.Td>
                           <Badge color="accent" variant="light">
                             {unit.type}
                           </Badge>
+                        </Table.Td>
+                        <Table.Td>
+                          <Text>
+                            {unit.serviceIntervalDays ? 
+                              `${unit.serviceIntervalDays} days` : 
+                              'Not set'}
+                          </Text>
                         </Table.Td>
                         <Table.Td>
                           <Text>
@@ -182,19 +251,47 @@ const CustomerDetail = () => {
                               {new Date(unit.nextServiceDate).toLocaleDateString()}
                             </Text>
                           </Group>
-                          {days < 0 ? (
-                            <Text size="sm" className="text-red-500">
-                              ({Math.abs(days)} days overdue)
-                            </Text>
-                          ) : days === 0 ? (
-                            <Text size="sm" className="text-orange-500">
-                              (Due today)
-                            </Text>
-                          ) : (
-                            <Text size="sm" className="text-gray-500">
-                              (in {days} days)
-                            </Text>
-                          )}
+                        </Table.Td>
+                        <Table.Td>
+                          <div className="flex items-center gap-2">
+                            {days < 0 ? (
+                              <>
+                                <Badge color="red" variant="filled" size="sm">
+                                  OVERDUE
+                                </Badge>
+                                <Text size="sm" className="text-red-600 font-medium">
+                                  {Math.abs(days)} day{Math.abs(days) !== 1 ? 's' : ''}
+                                </Text>
+                              </>
+                            ) : days === 0 ? (
+                              <>
+                                <Badge color="orange" variant="filled" size="sm">
+                                  DUE TODAY
+                                </Badge>
+                                <Text size="sm" className="text-orange-600 font-medium">
+                                  Urgent
+                                </Text>
+                              </>
+                            ) : days <= 7 ? (
+                              <>
+                                <Badge color="yellow" variant="filled" size="sm">
+                                  DUE SOON
+                                </Badge>
+                                <Text size="sm" className="text-yellow-700 font-medium">
+                                  {days} day{days !== 1 ? 's' : ''}
+                                </Text>
+                              </>
+                            ) : (
+                              <>
+                                <Badge color="green" variant="filled" size="sm">
+                                  SCHEDULED
+                                </Badge>
+                                <Text size="sm" className="text-green-600 font-medium">
+                                  {days} day{days !== 1 ? 's' : ''}
+                                </Text>
+                              </>
+                            )}
+                          </div>
                         </Table.Td>
                         <Table.Td>
                           <Badge color={status.color} variant="light">
